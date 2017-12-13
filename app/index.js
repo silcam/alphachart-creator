@@ -120,12 +120,14 @@ class AlphaChart extends React.Component {
 
     saveChart() {
         dialog.showSaveDialog({defaultPath: 'My Alphabet.apc'}, (filename) => {
-            let fs = require('fs');
-            fs.writeFile(filename, JSON.stringify(this.state.alphabet), (err) => {
-                if(err) {
-                    dialog.showErrorBox('Error', err.message)
-                }
-            });
+            if (filename) {
+                let fs = require('fs');
+                fs.writeFile(filename, JSON.stringify(this.state.alphabet), (err) => {
+                    if(err) {
+                        dialog.showErrorBox('Error', err.message)
+                    }
+                });
+            }
         });
     }
 
