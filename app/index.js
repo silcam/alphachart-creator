@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+const {dialog} = require('electron').remote
+console.log(dialog)
+
 function HeaderInput(props) {
     return (
         <input type='text' value={props.value} onChange={props.updateValue} />
@@ -54,7 +57,7 @@ function chartArray(rows, columns, alphabet) {
 
 class Chart extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
     }
 
     render() {
@@ -70,6 +73,14 @@ class Chart extends React.Component {
             </table>
         );
     }
+}
+
+function SaveButton(props) {
+    return (
+        <button onClick={props.saveChart}>
+            Save
+        </button>
+    )
 }
 
 function defaultAlphabet() {
@@ -88,6 +99,7 @@ class AlphaChart extends React.Component {
         this.updateRows = this.updateRows.bind(this);
         this.updateColumns = this.updateColumns.bind(this);
         this.updateLetter = this.updateLetter.bind(this);
+        this.saveChart = this.saveChart.bind(this);
 
         this.state = {rows: 7, columns: 4, alphabet: defaultAlphabet()};
     }
@@ -106,6 +118,17 @@ class AlphaChart extends React.Component {
         )
     }
 
+    saveChart() {
+        dialog.showSaveDialog({defaultPath: 'My Alphabet.apc'}, (filename) => {
+            let fs = require('fs');
+            fs.writeFile(filename, JSON.stringify(this.state.alphabet), (err) => {
+                if(err) {
+                    dialog.showErrorBox('Error', err.message)
+                }
+            });
+        });
+    }
+
     render() {
         return (
             <div>
@@ -119,6 +142,8 @@ class AlphaChart extends React.Component {
                     columns={this.state.columns}
                     alphabet={this.state.alphabet}
                     updateLetter={this.updateLetter} />
+                <SaveButton 
+                    saveChart={this.saveChart} />
             </div>
         );
     }
