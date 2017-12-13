@@ -21,15 +21,15 @@ function ChartCell(props) {
     const letter = props.letterObject.letter;
     const index = props.letterObject.index;
     return (
-        <td key={index}>
-            <input type='text' value={letter} size='1' onChange={(e) => props.updateLetter(index, e.target.value)} />
+        <td>
+            <input type='text' value={letter} size='1' maxLength='1' onChange={(e) => props.updateLetter(index, e.target.value)} />
         </td>
     )
 }
 
 function ChartRow(props) {
     const cells = props.row.map( 
-        (letter, index) => <ChartCell letterObject={letter} index={props.startIndex + index} updateLetter={props.updateLetter} />
+        (letterObject) => <ChartCell key={letterObject.index} letterObject={letterObject} updateLetter={props.updateLetter} />
     );
     return (
         <tr>
@@ -44,7 +44,8 @@ function chartArray(rows, columns, alphabet) {
     for(let r=0; r<rows; ++r){
         chart.push([]);
         for(let c=0; c<columns; ++c){
-            chart[r].push({letter: alphabet[i], index: i});
+            let letter = alphabet[i] || ''
+            chart[r].push({letter: letter, index: i});
             ++i;
         }
     }
@@ -59,11 +60,13 @@ class Chart extends React.Component {
     render() {
         const chart = chartArray(this.props.rows, this.props.columns, this.props.alphabet);
         const rows = chart.map(
-            (row, index) => <ChartRow row={row} startIndex={index * this.props.columns} updateLetter={this.props.updateLetter} />
+            (row, index) => <ChartRow row={row} key={index} updateLetter={this.props.updateLetter} />
         );
         return (
             <table>
-                {rows}
+                <tbody>
+                    {rows}
+                </tbody>
             </table>
         );
     }
