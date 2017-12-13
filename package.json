@@ -4,8 +4,8 @@
   "description": "Create alphabet charts for the AlphaChart app.",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "build": "babel app -d build --copy-files"
+    "build": "babel app -d build --copy-files",
+    "start": "npm run build && electron ."
   },
   "repository": {
     "type": "git",
