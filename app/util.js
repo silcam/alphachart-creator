@@ -32,8 +32,10 @@ function copyAndResizeImage(src, dest, maxWidth, maxHeight, callback) {
     const safeDest = safeCopyDest(dest);
     //sharp(src).resize(maxWidth, maxHeight).max().toFile(safeDest);
     Jimp.read(src, (err, lenna) => {
-        lenna.scaleToFit(maxWidth, maxHeight).write(safeDest);
-        callback(safeDest);
+        lenna.scaleToFit(maxWidth, maxHeight).write(safeDest, () => {
+            callback(safeDest);
+        });
+        //callback(safeDest);
     });
 }
 

@@ -15,6 +15,8 @@ class  RootElement extends React.Component {
     constructor(props) {
         super(props);
         
+        this.addLetter = this.addLetter.bind(this);
+        this.removeLetter = this.removeLetter.bind(this);
         this.changeImage = this.changeImage.bind(this);
         this.removeImage = this.removeImage.bind(this);
         this.updateAlphabet = this.updateAlphabet.bind(this);
@@ -26,6 +28,30 @@ class  RootElement extends React.Component {
 
         let alphabet = ipcRenderer.sendSync('get-alphabet-from-working') ||  Alphabet.defaultAlphabet();
         this.state = {alphabet: alphabet};
+    }
+
+    addLetter() {
+        this.setState(
+            (prevState, props) => {
+                let newLetter = {index: prevState.alphabet.length+1, letter: ''};
+                let alphabet = prevState.alphabet.slice();
+                alphabet.push(newLetter);
+                ipcRenderer.send('save-to-working', alphabet);
+                return {alphabet: alphabet};
+            }
+        );
+    }
+
+    removeLetter(index) {
+        this.setState(
+            (prevState) => {
+                let alphabet = prevState.alphabet.slice();
+                alphabet.splice(index, 1);
+                console.log(JSON.stringify(alphabet));
+                ipcRenderer.send('save-to-working', alphabet);
+                return {alphabet: alphabet};
+            }
+        )
     }
     
     changeImage(index) {
@@ -67,6 +93,8 @@ class  RootElement extends React.Component {
                 <p>Node version: {process.versions.node}</p>
                 <AlphabetChart
                     alphabet={this.state.alphabet}
+                    addLetter={this.addLetter}
+                    removeLetter={this.removeLetter}
                     changeImage={this.changeImage}
                     removeImage={this.removeImage}
                     updateAlphabet={this.updateAlphabet}

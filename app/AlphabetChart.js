@@ -2,25 +2,9 @@ import React from 'react';
 const {dialog} = require('electron').remote
 console.log(dialog)
 
-function HeaderInput(props) {
-    return (
-        <input type='text' value={props.value} onChange={props.updateValue} />
-    )
-}
-
-function ChartHeader(props) {
-    return (
-        <p>
-            <label>Chart:</label>
-            <label>Rows: <HeaderInput value={props.rows} updateValue={props.updateRows} /></label>
-            <label>Columns: <HeaderInput value={props.columns} updateValue={props.updateColumns} /></label>
-        </p>
-    )
-}
-
 function ImageSection(props) {
     const image = props.letterObject.image;
-    const index = props.letterObject.index;
+    const index = props.index;
     if (image) {
         return (
             <div>
@@ -48,23 +32,36 @@ function ImageSection(props) {
 
 function ChartCell(props) {
     const letter = props.letterObject.letter;
-    const index = props.letterObject.index;
-    return (
-        <td>
-            <ImageSection {...props} />
-            <input type='text' value={letter} size='1' maxLength='1' onChange={(e) => props.updateLetter(index, e.target.value)} />
-        </td>
-    )
+    const index = props.index;
+    if(props.letterObject.letter !== undefined){
+        return (
+            <td>
+                <ImageSection {...props} />
+                <input type='text' value={letter} size='1' maxLength='1' onChange={(e) => props.updateLetter(index, e.target.value)} />
+                <button onClick={() => props.removeLetter(index)}>Remove Letter</button>
+            </td>
+        );
+    }
+    else {
+        return (
+            <td>
+                <button onClick={props.addLetter}>Add Letter</button>
+            </td>
+        )
+    }
 }
 
 function ChartRow(props) {
     const cells = props.row.map( 
-        (letterObject) => <ChartCell 
-                                key={letterObject.index} 
-                                letterObject={letterObject} 
-                                updateLetter={props.updateLetter}
-                                changeImage={props.changeImage}
-                                removeImage={props.removeImage} />
+        (letterObject, index) => <ChartCell 
+                                    key={index}
+                                    index={props.startIndex + index}
+                                    letterObject={letterObject} 
+                                    addLetter={props.addLetter}
+                                    removeLetter={props.removeLetter}
+                                    updateLetter={props.updateLetter}
+                                    changeImage={props.changeImage}
+                                    removeImage={props.removeImage} />
     );
     return (
         <tr>
@@ -73,62 +70,29 @@ function ChartRow(props) {
     )
 }
 
-function chartArray(rows, columns, alphabet) {
+function chartArray(alphabet) {
+    const cols = 4;
     let chart = []
     let i=0;
+    let rows = Math.ceil((alphabet.length + 1) / cols);
     for(let r=0; r<rows; ++r){
         chart.push([]);
-        for(let c=0; c<columns; ++c){
-            let letterObject = alphabet[i] || {index: i}
+        for(let c=0; c<cols; ++c){
+            let letterObject = alphabet[i] || {}
             chart[r].push(letterObject);
             ++i;
+            if(i > alphabet.length){
+                return chart;
+            }
         }
     }
     return chart;
 }
 
-class Chart extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        const chart = chartArray(this.props.rows, this.props.columns, this.props.alphabet);
-        const rows = chart.map(
-            (row, index) => <ChartRow 
-                                row={row} 
-                                key={index} 
-                                updateLetter={this.props.updateLetter}
-                                changeImage={this.props.changeImage}
-                                removeImage={this.props.removeImage} />
-        );
-        return (
-            <table>
-                <tbody>
-                    {rows}
-                </tbody>
-            </table>
-        );
-    }
-}
-
-
 class AlphabetChart extends React.Component {
     constructor(props) {
         super(props);
-        this.updateRows = this.updateRows.bind(this);
-        this.updateColumns = this.updateColumns.bind(this);
         this.updateLetter = this.updateLetter.bind(this);
-
-        this.state = {rows: 7, columns: 4};
-    }
-
-    updateRows(event) {
-        this.setState({rows: event.target.value})
-    }
-
-    updateColumns(event) {
-        this.setState({columns: event.target.value});
     }
 
     updateLetter(index, newLetter) {
@@ -136,21 +100,24 @@ class AlphabetChart extends React.Component {
     }
 
     render() {
+        const chart = chartArray(this.props.alphabet);
+        const rows = chart.map(
+            (row, index) => <ChartRow 
+                                row={row} 
+                                key={index}
+                                startIndex={index * 4} // TODO Extract constant
+                                updateLetter={this.updateLetter}
+                                changeImage={this.props.changeImage}
+                                removeImage={this.props.removeImage}
+                                addLetter={this.props.addLetter}
+                                removeLetter={this.props.removeLetter} />
+        );
         return (
-            <div>
-                <ChartHeader 
-                    rows={this.state.rows} 
-                    columns={this.state.columns}
-                    updateRows={this.updateRows}
-                    updateColumns={this.updateColumns} />
-                <Chart
-                    rows={this.state.rows}
-                    columns={this.state.columns}
-                    alphabet={this.props.alphabet}
-                    updateLetter={this.updateLetter}
-                    changeImage={this.props.changeImage}
-                    removeImage={this.props.removeImage} />
-            </div>
+            <table>
+                <tbody>
+                    {rows}
+                </tbody>
+            </table>
         );
     }
 }
