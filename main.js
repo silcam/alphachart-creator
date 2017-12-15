@@ -3,13 +3,10 @@ const path = require('path')
 const url = require('url')
 
 
-// React DevTools
-
-
 let win 
 
 function createWindow () {
-    win = new BrowserWindow({width: 1200, height: 800})
+    win = new BrowserWindow({width: 720, height: 1280})
 
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'build', 'index.html'),
@@ -18,7 +15,6 @@ function createWindow () {
     }))
 
     // Dev Tools
-    //win.webContents.openDevTools()
     const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
     installExtension(REACT_DEVELOPER_TOOLS).then((name) => {
         console.log(`Added Extension:  ${name}`);
@@ -26,8 +22,7 @@ function createWindow () {
     .catch((err) => {
         console.log('An error occurred: ', err);
     });
-
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     // Events
     win.on('closed', () => {
