@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const Jimp = require('jimp');
 
 function copyFileSync(src, dest) {
@@ -42,6 +43,14 @@ function safeUnlink(file) {
     }
 }
 
+function clearDir(dir) {
+    const files = fs.readdirSync(dir);
+    for(let file of files) {
+        fs.unlink(path.join(dir, file), ()=>{});
+    }
+}
+
 exports.safeCopyFileSync = safeCopyFileSync;
 exports.copyAndResizeImage = copyAndResizeImage;
 exports.safeUnlink = safeUnlink;
+exports.clearDir = clearDir;

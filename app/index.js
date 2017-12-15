@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AlphabetChart from './AlphabetChart';
+import FileButtons from './FileButtons';
 
 const {ipcRenderer} = require('electron');
 
@@ -18,6 +19,7 @@ class  RootElement extends React.Component {
         this.removeImage = this.removeImage.bind(this);
         this.updateAlphabet = this.updateAlphabet.bind(this);
         this.saveChart = this.saveChart.bind(this);
+        this.openChart = this.openChart.bind(this);
         this.setImage = this.setImage.bind(this);
 
         ipcRenderer.on('set-image', this.setImage)
@@ -54,6 +56,10 @@ class  RootElement extends React.Component {
         ipcRenderer.send('save-to-file', this.state.alphabet);
     }
 
+    openChart() {
+        this.setState( {alphabet: ipcRenderer.sendSync('open-from-file')} );
+    }
+
     render () {
         return (
             <div>
@@ -65,6 +71,9 @@ class  RootElement extends React.Component {
                     removeImage={this.removeImage}
                     updateAlphabet={this.updateAlphabet}
                     saveChart={this.saveChart} />
+                <FileButtons
+                    saveChart={this.saveChart}
+                    openChart={this.openChart} />
             </div>
         );
     }

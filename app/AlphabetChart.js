@@ -111,13 +111,6 @@ class Chart extends React.Component {
         );
     }
 }
-function SaveButton(props) {
-    return (
-        <button onClick={props.saveChart}>
-            Save
-        </button>
-    )
-}
 
 
 class AlphabetChart extends React.Component {
@@ -157,8 +150,6 @@ class AlphabetChart extends React.Component {
                     updateLetter={this.updateLetter}
                     changeImage={this.props.changeImage}
                     removeImage={this.props.removeImage} />
-                <SaveButton 
-                    saveChart={this.props.saveChart} />
             </div>
         );
     }

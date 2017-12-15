@@ -3,6 +3,7 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 const util = require('./build/util');
+const AdmZip = require('adm-zip');
 
 
 let win 
@@ -54,6 +55,16 @@ ipcMain.on('get-alphabet-from-working', (event) => {
     else {
         event.returnValue = null;
     }
+});
+
+ipcMain.on('open-from-file', (event) => {
+    const filepaths = dialog.showOpenDialog(win, {filters: [{name: 'Alphabet Chart', extensions: ['apc']}]});
+    if (filepaths && filepaths[0]) {
+        util.clearDir(getWorkingDirectory());
+        let zip = new AdmZip(filepaths[0]);
+        zip.extractAllTo(getWorkingDirectory());
+        event.returnValue = JSON.parse(fs.readFileSync(getWorkingJson(), {encoding: 'utf8'}));
+    }
 })
 
 ipcMain.on('change-image', (event, index, oldImage) => {
@@ -83,12 +94,14 @@ ipcMain.on('save-to-working', (event, alphabet) => {
 ipcMain.on('save-to-file', (event, alphabet) => {
     dialog.showSaveDialog(win, {defaultPath: 'My Alphabet.apc'}, (filename) => {
         if (filename) {
-            let fs = require('fs');
-            fs.writeFile(filename, JSON.stringify(alphabet), (err) => {
-                if(err) {
-                    dialog.showErrorBox('Error', err.message);
-                }
-            });
+            let zip = new AdmZip();
+            zip.addLocalFolder(getWorkingDirectory());
+            try{
+                zip.writeZip(filename);
+            }
+            catch(err) {
+                dialog.showErrorBox('Unable to save chart', 'Try saving it in a different folder.\n\n' + err.message);
+            }
         }
     });
 });
