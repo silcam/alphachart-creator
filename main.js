@@ -56,15 +56,19 @@ ipcMain.on('get-alphabet-from-working', (event) => {
     }
 })
 
-ipcMain.on('get-image', (event) => {
+ipcMain.on('change-image', (event, index, oldImage) => {
     const filepaths = dialog.showOpenDialog(win, {filters: [{name: 'Images', extensions: ['jpg', 'png', 'gif']}]});
     if (filepaths && filepaths[0]) {
+        util.safeUnlink(oldImage);
         let dest = path.join(getWorkingDirectory(), path.basename(filepaths[0]));
-        event.returnValue = util.safeCopyFileSync(filepaths[0], dest);
+        util.copyAndResizeImage(filepaths[0], dest, 150, 150, (imageFile) => {
+            event.sender.send('set-image', imageFile, index);
+        });
     }
-    else {
-        event.returnValue = null;
-    }
+});
+
+ipcMain.on('remove-image', (event, oldImage) => {
+    util.safeUnlink(oldImage);
 })
 
 ipcMain.on('save-to-working', (event, alphabet) => {

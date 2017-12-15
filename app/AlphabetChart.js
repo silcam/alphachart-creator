@@ -126,7 +126,6 @@ class AlphabetChart extends React.Component {
         this.updateRows = this.updateRows.bind(this);
         this.updateColumns = this.updateColumns.bind(this);
         this.updateLetter = this.updateLetter.bind(this);
-        this.removeImage = this.removeImage.bind(this);
 
         this.state = {rows: 7, columns: 4};
     }
@@ -143,10 +142,6 @@ class AlphabetChart extends React.Component {
         this.props.updateAlphabet(index, {letter: newLetter});
     }
 
-    removeImage(index) {
-        this.props.updateAlphabet(index, {image: null});
-    }
-
     render() {
         return (
             <div>
@@ -161,7 +156,7 @@ class AlphabetChart extends React.Component {
                     alphabet={this.props.alphabet}
                     updateLetter={this.updateLetter}
                     changeImage={this.props.changeImage}
-                    removeImage={this.removeImage} />
+                    removeImage={this.props.removeImage} />
                 <SaveButton 
                     saveChart={this.props.saveChart} />
             </div>

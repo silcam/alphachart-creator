@@ -15,18 +15,29 @@ class  RootElement extends React.Component {
         super(props);
         
         this.changeImage = this.changeImage.bind(this);
+        this.removeImage = this.removeImage.bind(this);
         this.updateAlphabet = this.updateAlphabet.bind(this);
         this.saveChart = this.saveChart.bind(this);
+        this.setImage = this.setImage.bind(this);
+
+        ipcRenderer.on('set-image', this.setImage)
 
         let alphabet = ipcRenderer.sendSync('get-alphabet-from-working') ||  Alphabet.defaultAlphabet();
         this.state = {alphabet: alphabet};
     }
     
     changeImage(index) {
-        let filename = ipcRenderer.sendSync('get-image');
-        if (filename) {
-            this.updateAlphabet(index, {image: filename});
-        }
+        ipcRenderer.send('change-image', index, this.state.alphabet[index].image);
+    }
+
+    removeImage(index) {
+        const oldImage = this.state.alphabet[index].image;
+        this.updateAlphabet(index, {image: null});
+        ipcRenderer.send('remove-image', oldImage);
+    }
+
+    setImage(event, filename, index) {
+        this.updateAlphabet(index, {image: filename});
     }
 
     updateAlphabet(index, update) {
@@ -51,6 +62,7 @@ class  RootElement extends React.Component {
                 <AlphabetChart
                     alphabet={this.state.alphabet}
                     changeImage={this.changeImage}
+                    removeImage={this.removeImage}
                     updateAlphabet={this.updateAlphabet}
                     saveChart={this.saveChart} />
             </div>
