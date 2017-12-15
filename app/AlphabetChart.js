@@ -126,7 +126,6 @@ class AlphabetChart extends React.Component {
         this.updateRows = this.updateRows.bind(this);
         this.updateColumns = this.updateColumns.bind(this);
         this.updateLetter = this.updateLetter.bind(this);
-        this.changeImage = this.changeImage.bind(this);
         this.removeImage = this.removeImage.bind(this);
 
         this.state = {rows: 7, columns: 4};
@@ -142,14 +141,6 @@ class AlphabetChart extends React.Component {
 
     updateLetter(index, newLetter) {
         this.props.updateAlphabet(index, {letter: newLetter});
-    }
-
-    changeImage(index) {
-        dialog.showOpenDialog({filters: [{name: 'Images', extensions: ['jpg', 'png', 'gif']}]}, (filepaths) => {
-            if (filepaths && filepaths[0]) {
-                this.props.updateAlphabet(index, {image: filepaths[0]});
-            }
-        });
     }
 
     removeImage(index) {
@@ -169,7 +160,7 @@ class AlphabetChart extends React.Component {
                     columns={this.state.columns}
                     alphabet={this.props.alphabet}
                     updateLetter={this.updateLetter}
-                    changeImage={this.changeImage}
+                    changeImage={this.props.changeImage}
                     removeImage={this.removeImage} />
                 <SaveButton 
                     saveChart={this.props.saveChart} />

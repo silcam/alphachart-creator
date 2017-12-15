@@ -2,42 +2,55 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import AlphabetChart from './AlphabetChart';
 
+const {ipcRenderer} = require('electron');
+
 const {dialog} = require('electron').remote
 console.log(dialog)
 
 let Alphabet = require('./Alphabet');
 
-let alphabet = Alphabet.defaultAlphabet;
 
 class  RootElement extends React.Component {
     constructor(props) {
         super(props);
         
+        this.changeImage = this.changeImage.bind(this);
         this.updateAlphabet = this.updateAlphabet.bind(this);
         this.saveChart = this.saveChart.bind(this);
 
-        let alphabet = Alphabet.defaultAlphabet();
+        let alphabet = ipcRenderer.sendSync('get-alphabet-from-working') ||  Alphabet.defaultAlphabet();
         this.state = {alphabet: alphabet};
+    }
+    
+    changeImage(index) {
+        let filename = ipcRenderer.sendSync('get-image');
+        if (filename) {
+            this.updateAlphabet(index, {image: filename});
+        }
     }
 
     updateAlphabet(index, update) {
         this.setState(
-            (prevState, props) => ({
-                alphabet: Alphabet.updateAlphabet(prevState.alphabet, index, update)
-            })
+            (prevState, props) => {
+                const alphabet = Alphabet.updateAlphabet(prevState.alphabet, index, update);
+                ipcRenderer.send('save-to-working', alphabet);
+                return {alphabet: alphabet};
+            }
         );
     }
 
     saveChart() {
-        saveAlphaChart(this.state.alphabet);
+        ipcRenderer.send('save-to-file', this.state.alphabet);
     }
 
     render () {
         return (
             <div>
                 <h1>Howdy</h1>
+                <p>Node version: {process.versions.node}</p>
                 <AlphabetChart
                     alphabet={this.state.alphabet}
+                    changeImage={this.changeImage}
                     updateAlphabet={this.updateAlphabet}
                     saveChart={this.saveChart} />
             </div>
@@ -49,19 +62,3 @@ ReactDOM.render(
     <RootElement />,
     document.getElementById('root')
 );
-
-// Functions
-
-
-function saveAlphaChart(alphabet) {
-    dialog.showSaveDialog({defaultPath: 'My Alphabet.apc'}, (filename) => {
-        if (filename) {
-            let fs = require('fs');
-            fs.writeFile(filename, JSON.stringify(alphabet), (err) => {
-                if(err) {
-                    dialog.showErrorBox('Error', err.message)
-                }
-            });
-        }
-    });
-}
