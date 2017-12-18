@@ -44,13 +44,33 @@ function addImageFile(window, oldImage, callback) {
     }
 }
 
-function newChart() {
+function warnAboutUnsavedChanges(window) {
+    if (configuration.readSetting(dirtyWorkingDir) ){
+        const buttons = ['Yes', 'No'];
+        let response = dialog.showMessageBox(window, 
+                                            {type: 'warning', 
+                                             buttons: buttons, 
+                                             title: 'Unsaved Changes',
+                                             message: 'There are unsaved changes that will be lost. Do you want to continue?'});
+        if (response == 1) { // No
+            return true; // Cancel
+        }
+    }
+    return false; // Continue
+}
+
+function newChart(window) {
+    let cancel = warnAboutUnsavedChanges(window);
+    if(cancel) { return false; }
     configuration.saveSetting(currentFile, undefined);
     configuration.saveSetting(dirtyWorkingDir, false);
     util.clearDir(getWorkingDirectory());
+    return true;
 }
 
 function open(window) {
+    let cancel = warnAboutUnsavedChanges(window);
+    if(cancel) { return false; }
     const filepaths = dialog.showOpenDialog(window, {filters: [{name: 'Alphabet Chart', extensions: ['apc']}]});
     if (filepaths && filepaths[0]) {
         util.clearDir(getWorkingDirectory());
@@ -59,7 +79,7 @@ function open(window) {
         saveFileConfigs(filepaths[0]);
         return workingAlphabet();
     }
-    return null;
+    return false;
 }
 
 function saveTo(filename) {

@@ -59,7 +59,7 @@ ipcMain.on('get-alphabet', (event) => {
 });
 
 ipcMain.on('open-from-file', (event) => {
-    event.sender.send('set-alphabet', AlphaChartFile.open(win));
+    fileOpen();
 })
 
 ipcMain.on('change-image', (event, index, oldImage) => {
@@ -111,13 +111,16 @@ function buildAppMenu() {
 }
 
 function fileNew(menuItem, window, event) {
-    AlphaChartFile.newChart();
-    win.webContents.send('set-alphabet', null);
+    if( AlphaChartFile.newChart(win) ){
+        win.webContents.send('set-alphabet', null);
+    }
 }
 
 function fileOpen() {
     const alphabet = AlphaChartFile.open(win);
-    win.webContents.send('set-alphabet', alphabet);
+    if( alphabet ) {
+        win.webContents.send('set-alphabet', alphabet);
+    }
 }
 
 function fileSave() {
