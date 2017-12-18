@@ -1,7 +1,7 @@
 
 function defaultAlphabet() {
     return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').map(
-        (letter) => ({letter: letter})
+        (letter) => ({upperCase: letter, lowerCase: letter.toLowerCase()})
     );
 }
 

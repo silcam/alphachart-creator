@@ -16,7 +16,7 @@ const isDev = require('electron-is-dev');
 function createWindow () {
     Menu.setApplicationMenu(buildAppMenu());
 
-    win = new BrowserWindow({width: 760, height: 840});
+    win = new BrowserWindow({width: 800, height: 860});
 
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'build', 'index.html'),

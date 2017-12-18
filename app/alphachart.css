@@ -2,7 +2,7 @@ html {
     overflow: auto;
 }
 
-table#alphabet-chart {
+/* table#alphabet-chart {
     width: auto;
     border-spacing: 8px;
     margin: 24px;
@@ -15,4 +15,49 @@ table#alphabet-chart {
 
 #alphabet-chart td:last-child {
     border: 1px solid black;
+} */
+
+#alphabet-chart {
+    display: table;
+    border-spacing: 4px;
+}
+
+.chart-row {
+    display: table-row;
+}
+
+.chart-cell {
+    display: table-cell;
+    border: 1px solid black;
+    margin: 4px;
+    vertical-align: top;
+}
+
+.chart-cell .btn-group {
+    float: right;
+    margin: 3px;
+}
+
+.chart-cell .image-wrapper, .image-placeholder {
+    height: 150px;
+    width: 150px;
+    margin: 8px 16px 4px 16px;
+}
+
+.chart-cell .image-placeholder {
+    background-color: grey;
+    display: flex;
+    align-items: center;
+    cursor: pointer
+}
+
+.chart-cell .image-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.chart-cell input {
+    font-size: 48px;
+    border: 0;
+    cursor: pointer;
 }

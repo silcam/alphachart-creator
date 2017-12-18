@@ -7,46 +7,80 @@ function ImageSection(props) {
     const index = props.index;
     if (image) {
         return (
-            <div>
-                <img src={image} style={{maxWidth: '150px', maxHeight: '150px'}} /><br />
-                <button onClick={ () => props.changeImage(index) }>
-                    Change Image
-                </button>
-                <button onClick={ () => props.removeImage(index) }>
-                    Remove Image
-                </button>
+            <div className='image-wrapper'>
+                <img src={image} style={{maxWidth: '150px', maxHeight: '150px'}} />
             </div>
         );
     }
     else {
         return (
-            <div>
-                <button onClick={ () => props.changeImage(index) }>
-                    Add Image
-                </button>
+            <div className='image-placeholder' onClick={()=>props.changeImage(props.index)}>
             </div>
 
         );
     }
 }
 
+function CellButtons(props) {
+    return (
+        <React.Fragment>
+            <div className='btn-group'>
+                <button className='btn btn-default'>
+                    <span className='icon icon-plus'
+                          onClick={()=>props.addLetter(props.index)}></span>
+                </button>
+                <button className='btn btn-default'>
+                    <span className='icon icon-picture'
+                          onClick={()=>props.changeImage(props.index)}></span>
+                </button>
+                <button className='btn btn-default'>
+                    <span className='icon icon-note-beamed'></span>
+                </button>
+                <button className='btn btn-default'>
+                    <span className='icon icon-mic'></span>
+                </button>
+                <button className='btn btn-default'>
+                    <span className='icon icon-cancel' 
+                          onClick={()=>props.removeLetter(props.index)}></span>
+                </button>
+            </div>
+            <div style={{clear: 'both'}}></div>
+        </React.Fragment>
+    );
+}
+
+function ChartInput(props) {
+    return (
+        <input type='text'
+                value={props.letter} 
+                size='1' 
+                maxLength='1' 
+                onChange={(e) => props.updateLetter(props.index, e.target.value)} />
+    )
+}
+
 function ChartCell(props) {
-    const letter = props.letterObject.letter;
-    const index = props.index;
-    if(props.letterObject.letter !== undefined){
+    const upperCase = props.letterObject.upperCase;
+    const lowerCase = props.letterObject.lowerCase;
+    if(props.letterObject.upperCase !== undefined){
         return (
-            <td>
+            <div className='chart-cell'>
+                <CellButtons {...props} />
                 <ImageSection {...props} />
-                <input type='text' value={letter} size='1' maxLength='1' onChange={(e) => props.updateLetter(index, e.target.value)} />
-                <button onClick={() => props.removeLetter(index)}>Remove Letter</button>
-            </td>
+                <ChartInput index={props.index} 
+                            letter={upperCase}
+                            updateLetter={props.updateUpperCase} />
+                <ChartInput index={props.index}
+                            letter={lowerCase}
+                            updateLetter={props.updateLowerCase} />
+            </div>
         );
     }
     else {
         return (
-            <td>
-                <button onClick={props.addLetter}>Add Letter</button>
-            </td>
+            <div className='chart-cell'>
+                <button onClick={()=>props.addLetter()}>Add Letter</button>
+            </div>
         )
     }
 }
@@ -59,14 +93,15 @@ function ChartRow(props) {
                                     letterObject={letterObject} 
                                     addLetter={props.addLetter}
                                     removeLetter={props.removeLetter}
-                                    updateLetter={props.updateLetter}
+                                    updateUpperCase={props.updateUpperCase}
+                                    updateLowerCase={props.updateLowerCase}
                                     changeImage={props.changeImage}
                                     removeImage={props.removeImage} />
     );
     return (
-        <tr>
+        <div className="chart-row">
             {cells}
-        </tr>
+        </div>
     )
 }
 
@@ -92,11 +127,16 @@ function chartArray(alphabet) {
 class AlphabetChart extends React.Component {
     constructor(props) {
         super(props);
-        this.updateLetter = this.updateLetter.bind(this);
+        this.updateUpperCase = this.updateUpperCase.bind(this);
+        this.updateLowerCase = this.updateLowerCase.bind(this);
     }
 
-    updateLetter(index, newLetter) {
-        this.props.updateAlphabet(index, {letter: newLetter});
+    updateUpperCase(index, newLetter) {
+        this.props.updateAlphabet(index, {upperCase: newLetter});
+    }
+
+    updateLowerCase(index, newLetter) {
+        this.props.updateAlphabet(index, {lowerCase: newLetter});
     }
 
     render() {
@@ -106,7 +146,8 @@ class AlphabetChart extends React.Component {
                                 row={row} 
                                 key={index}
                                 startIndex={index * 4} // TODO Extract constant
-                                updateLetter={this.updateLetter}
+                                updateUpperCase={this.updateUpperCase}
+                                updateLowerCase={this.updateLowerCase}
                                 changeImage={this.props.changeImage}
                                 removeImage={this.props.removeImage}
                                 addLetter={this.props.addLetter}

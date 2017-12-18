@@ -33,12 +33,18 @@ class  RootElement extends React.Component {
         ipcRenderer.send('get-alphabet');
     }
 
-    addLetter() {
+    addLetter(index) {
+        console.log("Index: " + index);
         this.setState(
             (prevState, props) => {
-                let newLetter = {index: prevState.alphabet.length+1, letter: ''};
+                let newLetter = {upperCase: 'A', lowerCase: 'a'};
                 let alphabet = prevState.alphabet.slice();
-                alphabet.push(newLetter);
+                if(index !== undefined){
+                    alphabet.splice(index, 0, newLetter);
+                }
+                else {
+                    alphabet.push(newLetter);
+                }
                 ipcRenderer.send('save-to-working', alphabet);
                 return {alphabet: alphabet};
             }
@@ -100,25 +106,17 @@ class  RootElement extends React.Component {
 
     render () {
         return (
-            <div>
+            <React.Fragment>
                 <ChartHeader filename='My Chart.apc' />
-                <div className=''>
-                    <div className=''>
-                    <div className=''>
-                        <h1>Howdy</h1>
-                        <p>Node version: {process.versions.node}</p>
-                        <AlphabetChart
-                            alphabet={this.state.alphabet}
-                            addLetter={this.addLetter}
-                            removeLetter={this.removeLetter}
-                            changeImage={this.changeImage}
-                            removeImage={this.removeImage}
-                            updateAlphabet={this.updateAlphabet}
-                            saveChart={this.saveChart} />
-                    </div>
-                    </div>
-                </div>
-            </div>
+                <AlphabetChart
+                    alphabet={this.state.alphabet}
+                    addLetter={this.addLetter}
+                    removeLetter={this.removeLetter}
+                    changeImage={this.changeImage}
+                    removeImage={this.removeImage}
+                    updateAlphabet={this.updateAlphabet}
+                    saveChart={this.saveChart} />
+            </React.Fragment>
         );
     }
 }
