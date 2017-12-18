@@ -23,11 +23,14 @@ class  RootElement extends React.Component {
         this.saveChart = this.saveChart.bind(this);
         this.openChart = this.openChart.bind(this);
         this.setImage = this.setImage.bind(this);
+        this.setAlphabet = this.setAlphabet.bind(this);
 
-        ipcRenderer.on('set-image', this.setImage)
+        ipcRenderer.on('set-image', this.setImage);
+        ipcRenderer.on('set-alphabet', this.setAlphabet);
 
-        let alphabet = ipcRenderer.sendSync('get-alphabet-from-working') ||  Alphabet.defaultAlphabet();
+        let alphabet = [];
         this.state = {alphabet: alphabet};
+        ipcRenderer.send('get-alphabet');
     }
 
     addLetter() {
@@ -68,6 +71,15 @@ class  RootElement extends React.Component {
         this.updateAlphabet(index, {image: filename});
     }
 
+    setAlphabet(event, alphabet) {
+        if (alphabet) {
+            this.setState({alphabet: alphabet});
+        }
+        else {
+            this.setState({alphabet: Alphabet.defaultAlphabet()});
+        }
+    }
+
     updateAlphabet(index, update) {
         this.setState(
             (prevState, props) => {
@@ -83,7 +95,7 @@ class  RootElement extends React.Component {
     }
 
     openChart() {
-        this.setState( {alphabet: ipcRenderer.sendSync('open-from-file')} );
+        ipcRenderer.send('open-from-file');
     }
 
     render () {

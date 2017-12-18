@@ -22,7 +22,9 @@
   "homepage": "https://github.com/silcam/alphachart-creator#readme",
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "electron-is-dev": "^0.3.0",
     "jimp": "^0.2.28",
+    "nconf": "^0.9.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },

@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+
+const {app} = require('electron');
 const Jimp = require('jimp');
 
 function copyFileSync(src, dest) {
@@ -52,7 +54,16 @@ function clearDir(dir) {
     }
 }
 
+function getAppDataDirectory() {
+    let dataPath = app.getPath('userData');
+    if (!fs.existsSync(dataPath)) {
+        fs.mkdirSync(dataPath);
+    }
+    return dataPath;
+}
+
 exports.safeCopyFileSync = safeCopyFileSync;
 exports.copyAndResizeImage = copyAndResizeImage;
 exports.safeUnlink = safeUnlink;
 exports.clearDir = clearDir;
+exports.getAppDataDirectory = getAppDataDirectory;
