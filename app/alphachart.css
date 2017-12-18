@@ -1,4 +1,18 @@
-td {
+html {
+    overflow: auto;
+}
+
+table#alphabet-chart {
+    width: auto;
+    border-spacing: 8px;
+    margin: 24px;
+}
+
+#alphabet-chart td {
     border: 1px solid black;
     padding: 12px;
+}
+
+#alphabet-chart td:last-child {
+    border: 1px solid black;
 }

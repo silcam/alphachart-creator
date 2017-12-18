@@ -1,3 +1,4 @@
+/*
 var remote = require('remote')
 var Menu = remote.require('menu')
 var MenuItem = remote.require('menu-item')
@@ -25,3 +26,4 @@ document.addEventListener('DOMContentLoaded', function () {
     menu.popup(remote.getCurrentWindow());
   })
 })
+*/

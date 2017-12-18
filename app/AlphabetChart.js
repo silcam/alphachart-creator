@@ -113,11 +113,11 @@ class AlphabetChart extends React.Component {
                                 removeLetter={this.props.removeLetter} />
         );
         return (
-            <table>
-                <tbody>
+            <div id='alphabet-chart'>
+                <div>
                     {rows}
-                </tbody>
-            </table>
+                </div>
+            </div>
         );
     }
 }

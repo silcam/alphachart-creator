@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AlphabetChart from './AlphabetChart';
-import FileButtons from './FileButtons';
+import ChartHeader from './ChartHeader';
 
 const {ipcRenderer} = require('electron');
 
@@ -101,19 +101,23 @@ class  RootElement extends React.Component {
     render () {
         return (
             <div>
-                <h1>Howdy</h1>
-                <p>Node version: {process.versions.node}</p>
-                <AlphabetChart
-                    alphabet={this.state.alphabet}
-                    addLetter={this.addLetter}
-                    removeLetter={this.removeLetter}
-                    changeImage={this.changeImage}
-                    removeImage={this.removeImage}
-                    updateAlphabet={this.updateAlphabet}
-                    saveChart={this.saveChart} />
-                <FileButtons
-                    saveChart={this.saveChart}
-                    openChart={this.openChart} />
+                <ChartHeader filename='My Chart.apc' />
+                <div className=''>
+                    <div className=''>
+                    <div className=''>
+                        <h1>Howdy</h1>
+                        <p>Node version: {process.versions.node}</p>
+                        <AlphabetChart
+                            alphabet={this.state.alphabet}
+                            addLetter={this.addLetter}
+                            removeLetter={this.removeLetter}
+                            changeImage={this.changeImage}
+                            removeImage={this.removeImage}
+                            updateAlphabet={this.updateAlphabet}
+                            saveChart={this.saveChart} />
+                    </div>
+                    </div>
+                </div>
             </div>
         );
     }
