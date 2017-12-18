@@ -2,21 +2,6 @@ html {
     overflow: auto;
 }
 
-/* table#alphabet-chart {
-    width: auto;
-    border-spacing: 8px;
-    margin: 24px;
-}
-
-#alphabet-chart td {
-    border: 1px solid black;
-    padding: 12px;
-}
-
-#alphabet-chart td:last-child {
-    border: 1px solid black;
-} */
-
 #alphabet-chart {
     display: table;
     border-spacing: 4px;
@@ -31,6 +16,15 @@ html {
     border: 1px solid black;
     margin: 4px;
     vertical-align: top;
+}
+
+div.add-new-cell {
+    vertical-align: middle;
+}
+
+button.add-new-cell {
+    display: block;
+    margin: auto;
 }
 
 .chart-cell .btn-group {
@@ -60,4 +54,13 @@ html {
     font-size: 48px;
     border: 0;
     cursor: pointer;
+    margin-left: 16px;
+}
+
+.btn-x-large {
+    padding: 15px 30px;
+}
+
+.icon-large {
+    font-size: 24px;
 }

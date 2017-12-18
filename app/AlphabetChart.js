@@ -78,8 +78,11 @@ function ChartCell(props) {
     }
     else {
         return (
-            <div className='chart-cell'>
-                <button onClick={()=>props.addLetter()}>Add Letter</button>
+            <div className='chart-cell add-new-cell'>
+                <button className='btn btn-default btn-x-large add-new-cell'
+                        onClick={()=>props.addLetter()}>
+                    <span className='icon icon-large icon-plus'></span>        
+                </button>
             </div>
         )
     }
