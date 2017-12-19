@@ -17,6 +17,9 @@ function OpenButton(props) {
 }
 
 function ChartHeader(props) {
+    if( process.platform.includes('win') ){
+        return null;
+    }
     return (
         <header className='toolbar toolbar-header'>
             <div className='toolbar-actions'>

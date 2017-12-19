@@ -68,9 +68,13 @@ ipcMain.on('change-image', (event, index, oldImage) => {
     })
 });
 
-ipcMain.on('remove-image', (event, oldImage) => {
-    AlphaChartFile.removeImageFile(oldImage);
-})
+ipcMain.on('remove-files', (event, ...files) => {
+    for( filename of files ){
+        if( filename ){
+            AlphaChartFile.removeFile(filename);
+        }
+    }
+});
 
 ipcMain.on('save-to-working', (event, alphabet) => {
     AlphaChartFile.saveWorking(alphabet);

@@ -52,6 +52,7 @@ button.add-new-cell {
 
 .chart-cell input {
     font-size: 48px;
+    width: 48px;
     border: 0;
     cursor: pointer;
     margin-left: 16px;

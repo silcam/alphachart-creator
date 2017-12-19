@@ -31,14 +31,14 @@ function saveWorking(alphabet) {
     });
 }
 
-function removeImageFile(imageFile) {
-    util.safeUnlink(imageFile);
+function removeFile(filename) {
+    util.safeUnlink(filename);
 }
 
 function addImageFile(window, oldImage, callback) {
     const filepaths = dialog.showOpenDialog(window, {filters: [{name: 'Images', extensions: ['jpg', 'png', 'gif']}]});
     if (filepaths && filepaths[0]) {
-        removeImageFile(oldImage);
+        removeFile(oldImage);
         let dest = path.join(getWorkingDirectory(), path.basename(filepaths[0]));
         util.copyAndResizeImage(filepaths[0], dest, 150, 150, callback);
     }
@@ -122,7 +122,7 @@ function getWorkingDirectory() {
 
 exports.workingAlphabet = workingAlphabet;
 exports.saveWorking = saveWorking;
-exports.removeImageFile = removeImageFile;
+exports.removeFile = removeFile;
 exports.addImageFile = addImageFile;
 exports.newChart = newChart;
 exports.open = open;

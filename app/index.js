@@ -18,7 +18,6 @@ class  RootElement extends React.Component {
         this.addLetter = this.addLetter.bind(this);
         this.removeLetter = this.removeLetter.bind(this);
         this.changeImage = this.changeImage.bind(this);
-        this.removeImage = this.removeImage.bind(this);
         this.updateAlphabet = this.updateAlphabet.bind(this);
         this.saveChart = this.saveChart.bind(this);
         this.openChart = this.openChart.bind(this);
@@ -54,9 +53,9 @@ class  RootElement extends React.Component {
     removeLetter(index) {
         this.setState(
             (prevState) => {
+                this.removeWorkingFiles(prevState.alphabet[index]);
                 let alphabet = prevState.alphabet.slice();
                 alphabet.splice(index, 1);
-                console.log(JSON.stringify(alphabet));
                 ipcRenderer.send('save-to-working', alphabet);
                 return {alphabet: alphabet};
             }
@@ -67,10 +66,8 @@ class  RootElement extends React.Component {
         ipcRenderer.send('change-image', index, this.state.alphabet[index].image);
     }
 
-    removeImage(index) {
-        const oldImage = this.state.alphabet[index].image;
-        this.updateAlphabet(index, {image: null});
-        ipcRenderer.send('remove-image', oldImage);
+    removeWorkingFiles(letterObject) {
+        ipcRenderer.send('remove-files', letterObject.image, letterObject.audio);
     }
 
     setImage(event, filename, index) {
@@ -113,7 +110,6 @@ class  RootElement extends React.Component {
                     addLetter={this.addLetter}
                     removeLetter={this.removeLetter}
                     changeImage={this.changeImage}
-                    removeImage={this.removeImage}
                     updateAlphabet={this.updateAlphabet}
                     saveChart={this.saveChart} />
             </React.Fragment>

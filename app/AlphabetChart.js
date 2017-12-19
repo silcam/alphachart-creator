@@ -98,8 +98,7 @@ function ChartRow(props) {
                                     removeLetter={props.removeLetter}
                                     updateUpperCase={props.updateUpperCase}
                                     updateLowerCase={props.updateLowerCase}
-                                    changeImage={props.changeImage}
-                                    removeImage={props.removeImage} />
+                                    changeImage={props.changeImage} />
     );
     return (
         <div className="chart-row">
@@ -152,7 +151,6 @@ class AlphabetChart extends React.Component {
                                 updateUpperCase={this.updateUpperCase}
                                 updateLowerCase={this.updateLowerCase}
                                 changeImage={this.props.changeImage}
-                                removeImage={this.props.removeImage}
                                 addLetter={this.props.addLetter}
                                 removeLetter={this.props.removeLetter} />
         );
