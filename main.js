@@ -54,6 +54,10 @@ ipcMain.on('get-title', () => {
     AlphaChartFile.setTitle(win);
 });
 
+ipcMain.on('get-working-dir', (event) => {
+    event.returnValue = AlphaChartFile.getWorkingDirectory();
+});
+
 ipcMain.on('get-alphabet', (event) => {
     event.sender.send('set-alphabet', AlphaChartFile.workingAlphabet());
 });
@@ -64,7 +68,7 @@ ipcMain.on('open-from-file', (event) => {
 
 ipcMain.on('change-image', (event, index, oldImage) => {
     AlphaChartFile.addImageFile(win, oldImage, (imageFile) => {
-        event.sender.send('set-image', imageFile, index);
+        event.sender.send('set-image', path.basename(imageFile), index);
     })
 });
 
@@ -86,7 +90,7 @@ ipcMain.on('save-to-file', () => {
 
 ipcMain.on('open-recording-window', (event, index, letterObject) => {
     if( !recordingWin ) {
-        recordingWin = new BrowserWindow({width: 550, height: 230, parent: win, modal: true});
+        recordingWin = new BrowserWindow({width: 550, height: 230, parent: win, modal: true, autoHideMenuBar: true});
         recordingWin.oldAudioFile = letterObject.audio;
         let queryString = '?index=' + index + '&letter=' + letterObject.upperCase;
         let myurl = url.format({
@@ -106,7 +110,7 @@ ipcMain.on('open-recording-window', (event, index, letterObject) => {
 ipcMain.on('save-audio', (event, buffer, index, letter) => {
     let filename = AlphaChartFile.saveAudio(buffer, index, letter, recordingWin.oldAudioFile);
     recordingWin.close();
-    win.webContents.send('set-audio', filename, index);
+    win.webContents.send('set-audio', path.basename(filename), index);
 });
 
 function buildAppMenu() {

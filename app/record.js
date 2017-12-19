@@ -115,7 +115,9 @@ class RootElement extends React.Component {
                         <Player src={audioURL} />
                     </div>
                 </div>
-                <DoneButton saveAndQuit={this.saveAndQuit} />
+                { this.state.audio && 
+                    <DoneButton saveAndQuit={this.saveAndQuit} />
+                }
             </React.Fragment>
         );
     }
