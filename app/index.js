@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {ipcRenderer} from 'electron';
+
+import Alphabet from './Alphabet';
 import AlphabetChart from './AlphabetChart';
 import ChartHeader from './ChartHeader';
 
-const {ipcRenderer} = require('electron');
+ipcRenderer.send('get-title');
 
-const {dialog} = require('electron').remote
-console.log(dialog)
-
-let Alphabet = require('./Alphabet');
-
+ipcRenderer.on('update-title', (event, newTitle) => {
+    window.document.title = newTitle;
+});
 
 class  RootElement extends React.Component {
     constructor(props) {

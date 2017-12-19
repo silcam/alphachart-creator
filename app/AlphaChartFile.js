@@ -1,4 +1,4 @@
-const {app, dialog} = require('electron');
+const {app, dialog, BrowserWindow, ipcMain} = require('electron');
 const util = require('./util');
 const fs = require('fs');
 const path = require('path');
@@ -8,9 +8,29 @@ const configuration = require('./configuration');
 const currentFile = 'currentFile';
 const dirtyWorkingDir = 'dirtyWorkingDir';
 
-function saveFileConfigs(filename) {
-    configuration.saveSetting(dirtyWorkingDir, false);
-    configuration.saveSetting(currentFile, filename);
+function saveFileConfigsAndUpdateTitle(window, dirty, filename) {
+    if(dirty) {
+        configuration.saveSetting(dirtyWorkingDir, true);
+        filename = configuration.readSetting('currentFile');
+    }
+    else {
+        configuration.saveSetting(dirtyWorkingDir, false);
+        configuration.saveSetting(currentFile, filename);
+    }
+    updateTitle(window, dirty, filename);
+}
+
+function updateTitle(window, dirty, filename) {
+    let title = (filename === undefined) ? 'Untitled Chart' : path.basename(filename);
+    if(dirty){ title = '*' + title; }
+    title += ' - AlphaChart Creator';
+    window.webContents.send('update-title', title);
+}
+
+function setTitle(window) {
+    const filename = configuration.readSetting(currentFile);
+    const dirty = configuration.readSetting(dirtyWorkingDir);
+    updateTitle(window, dirty, filename);
 }
 
 function workingAlphabet() {
@@ -21,8 +41,8 @@ function workingAlphabet() {
     return null;
 }
 
-function saveWorking(alphabet) {
-    configuration.saveSetting(dirtyWorkingDir, true);
+function saveWorking(window, alphabet) {
+    saveFileConfigsAndUpdateTitle(window, true);
     let filename = getWorkingJson();
     fs.writeFile(filename, JSON.stringify(alphabet), (err) => {
         if(err) {
@@ -62,8 +82,7 @@ function warnAboutUnsavedChanges(window) {
 function newChart(window) {
     let cancel = warnAboutUnsavedChanges(window);
     if(cancel) { return false; }
-    configuration.saveSetting(currentFile, undefined);
-    configuration.saveSetting(dirtyWorkingDir, false);
+    saveFileConfigsAndUpdateTitle(window, false, undefined);
     util.clearDir(getWorkingDirectory());
     return true;
 }
@@ -76,18 +95,18 @@ function open(window) {
         util.clearDir(getWorkingDirectory());
         let zip = new AdmZip(filepaths[0]);
         zip.extractAllTo(getWorkingDirectory());
-        saveFileConfigs(filepaths[0]);
+        saveFileConfigsAndUpdateTitle(window, false, filepaths[0]);
         return workingAlphabet();
     }
     return false;
 }
 
-function saveTo(filename) {
+function saveTo(window, filename) {
     let zip = new AdmZip();
     zip.addLocalFolder(getWorkingDirectory());
     try{
         zip.writeZip(filename);
-        saveFileConfigs(filename);
+        saveFileConfigsAndUpdateTitle(window, false, filename);
     }
     catch(err) {
         dialog.showErrorBox('Unable to save chart', 'Try saving it in a different folder.\n\n' + err.message);
@@ -99,12 +118,12 @@ function save(window, options={}) {
     if( options.saveAs || !currentFileName) {
         dialog.showSaveDialog(window, {defaultPath: 'My Alphabet.apc'}, (filename) => {
             if (filename) {
-                saveTo(filename);
+                saveTo(window, filename);
             }
         });
     }
     else {
-        saveTo(currentFileName);
+        saveTo(window, currentFileName);
     }
 }
 
@@ -120,6 +139,7 @@ function getWorkingDirectory() {
     return workingPath;
 }
 
+exports.setTitle = setTitle;
 exports.workingAlphabet = workingAlphabet;
 exports.saveWorking = saveWorking;
 exports.removeFile = removeFile;

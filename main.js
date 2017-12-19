@@ -17,7 +17,6 @@ function createWindow () {
     Menu.setApplicationMenu(buildAppMenu());
 
     win = new BrowserWindow({width: 800, height: 860});
-
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'build', 'index.html'),
         protocol: 'file:',
@@ -52,7 +51,11 @@ app.on('activate', () => {
     if (win === null) {
         createWindow()
     }
-})
+});
+
+ipcMain.on('get-title', () => {
+    AlphaChartFile.setTitle(win);
+});
 
 ipcMain.on('get-alphabet', (event) => {
     event.sender.send('set-alphabet', AlphaChartFile.workingAlphabet());
@@ -77,7 +80,7 @@ ipcMain.on('remove-files', (event, ...files) => {
 });
 
 ipcMain.on('save-to-working', (event, alphabet) => {
-    AlphaChartFile.saveWorking(alphabet);
+    AlphaChartFile.saveWorking(win, alphabet);
 });
 
 ipcMain.on('save-to-file', () => {
