@@ -23,9 +23,12 @@ class  RootElement extends React.Component {
         this.saveChart = this.saveChart.bind(this);
         this.openChart = this.openChart.bind(this);
         this.setImage = this.setImage.bind(this);
+        this.setAudio = this.setAudio.bind(this);
         this.setAlphabet = this.setAlphabet.bind(this);
+        this.openRecordingWindow = this.openRecordingWindow.bind(this);
 
         ipcRenderer.on('set-image', this.setImage);
+        ipcRenderer.on('set-audio', this.setAudio);
         ipcRenderer.on('set-alphabet', this.setAlphabet);
 
         let alphabet = [];
@@ -75,6 +78,10 @@ class  RootElement extends React.Component {
         this.updateAlphabet(index, {image: filename});
     }
 
+    setAudio(event, filename, index) {
+        this.updateAlphabet(index, {audio: filename});
+    }
+
     setAlphabet(event, alphabet) {
         if (alphabet) {
             this.setState({alphabet: alphabet});
@@ -102,6 +109,12 @@ class  RootElement extends React.Component {
         ipcRenderer.send('open-from-file');
     }
 
+    openRecordingWindow(index) {
+        ipcRenderer.send('open-recording-window', 
+                            index, 
+                            this.state.alphabet[index]);
+    }
+
     render () {
         return (
             <React.Fragment>
@@ -112,7 +125,8 @@ class  RootElement extends React.Component {
                     removeLetter={this.removeLetter}
                     changeImage={this.changeImage}
                     updateAlphabet={this.updateAlphabet}
-                    saveChart={this.saveChart} />
+                    saveChart={this.saveChart}
+                    openRecordingWindow={this.openRecordingWindow} />
             </React.Fragment>
         );
     }

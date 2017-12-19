@@ -64,6 +64,16 @@ function addImageFile(window, oldImage, callback) {
     }
 }
 
+function saveAudio(buffer, index, letter, oldAudioFile) {
+    if(oldAudioFile){ util.safeUnlink(oldAudioFile); }
+
+    if( index < 10 ){ index = '0' + index; }
+    let basename = index + '-' + letter + '.wav';
+    let filename = path.join(getWorkingDirectory(), basename);
+    fs.writeFile(filename, buffer, ()=>{});
+    return filename;
+}
+
 function warnAboutUnsavedChanges(window) {
     if (configuration.readSetting(dirtyWorkingDir) ){
         const buttons = ['Yes', 'No'];
@@ -144,6 +154,7 @@ exports.workingAlphabet = workingAlphabet;
 exports.saveWorking = saveWorking;
 exports.removeFile = removeFile;
 exports.addImageFile = addImageFile;
+exports.saveAudio = saveAudio;
 exports.newChart = newChart;
 exports.open = open;
 exports.save = save;

@@ -25,20 +25,27 @@ function CellButtons(props) {
     return (
         <React.Fragment>
             <div className='btn-group'>
-                <button className='btn btn-default'>
-                    <span className='icon icon-plus'
-                          onClick={()=>props.addLetter(props.index)}></span>
+                <button className='btn btn-default'
+                        onClick={()=>props.addLetter(props.index)}>
+                    <span className='icon icon-plus'></span>
                 </button>
-                <button className='btn btn-default'>
-                    <span className='icon icon-picture'
-                          onClick={()=>props.changeImage(props.index)}></span>
+                <button className='btn btn-default'
+                        onClick={()=>props.changeImage(props.index)}>
+                    <span className='icon icon-picture'></span>
                 </button>
-                <button className='btn btn-default'>
-                    <span className='icon icon-note-beamed'></span>
-                </button>
-                <button className='btn btn-default'>
+                <button className='btn btn-default' 
+                        onClick={()=>props.openRecordingWindow(props.index)}>
                     <span className='icon icon-mic'></span>
                 </button>
+                {props.letterObject.audio && 
+                    <button className='btn btn-default'
+                            onClick={()=>{
+                                document.getElementById('audio' + props.index).play();
+                            }}>
+                        <span className='icon icon-play'></span>
+                        <audio id={'audio' + props.index} src={props.letterObject.audio}></audio>
+                    </button>
+                }
                 <button className='btn btn-default'>
                     <span className='icon icon-cancel' 
                           onClick={()=>props.removeLetter(props.index)}></span>
@@ -98,7 +105,8 @@ function ChartRow(props) {
                                     removeLetter={props.removeLetter}
                                     updateUpperCase={props.updateUpperCase}
                                     updateLowerCase={props.updateLowerCase}
-                                    changeImage={props.changeImage} />
+                                    changeImage={props.changeImage}
+                                    openRecordingWindow={props.openRecordingWindow} />
     );
     return (
         <div className="chart-row">
@@ -152,7 +160,8 @@ class AlphabetChart extends React.Component {
                                 updateLowerCase={this.updateLowerCase}
                                 changeImage={this.props.changeImage}
                                 addLetter={this.props.addLetter}
-                                removeLetter={this.props.removeLetter} />
+                                removeLetter={this.props.removeLetter}
+                                openRecordingWindow={this.props.openRecordingWindow} />
         );
         return (
             <div id='alphabet-chart'>

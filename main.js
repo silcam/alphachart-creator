@@ -11,6 +11,7 @@ const AlphaChartFile = require('./build/AlphaChartFile');
 
 
 let win;
+let recordingWin;
 const isDev = require('electron-is-dev');
 
 function createWindow () {
@@ -31,21 +32,17 @@ function createWindow () {
     .catch((err) => {
         console.log('An error occurred: ', err);
     });
-    //win.webContents.openDevTools();
 
     // Events
     win.on('closed', () => {
-        win = null
-    })
+        win = null;
+        if (process.platform !== 'darwin') {
+            app.quit()
+        }
+    });
 }
 
-app.on('ready', createWindow)
-
-app.on('window-all-closed', ()=>{
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
-})
+app.on('ready', createWindow);
 
 app.on('activate', () => {
     if (win === null) {
@@ -85,6 +82,31 @@ ipcMain.on('save-to-working', (event, alphabet) => {
 
 ipcMain.on('save-to-file', () => {
     fileSave();
+});
+
+ipcMain.on('open-recording-window', (event, index, letterObject) => {
+    if( !recordingWin ) {
+        recordingWin = new BrowserWindow({width: 550, height: 230, parent: win, modal: true});
+        recordingWin.oldAudioFile = letterObject.audio;
+        let queryString = '?index=' + index + '&letter=' + letterObject.upperCase;
+        let myurl = url.format({
+            pathname: path.join(__dirname, 'build', 'record.html'),
+            protocol: 'file:',
+            slashes: true
+        });
+        myurl += queryString;
+        recordingWin.loadURL(myurl);
+
+        recordingWin.on('closed', () => {
+            recordingWin = null;
+        })
+    }
+});
+
+ipcMain.on('save-audio', (event, buffer, index, letter) => {
+    let filename = AlphaChartFile.saveAudio(buffer, index, letter, recordingWin.oldAudioFile);
+    recordingWin.close();
+    win.webContents.send('set-audio', filename, index);
 });
 
 function buildAppMenu() {
