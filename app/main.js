@@ -88,7 +88,7 @@ ipcMain.on('change-image', (event, index, oldImage) => {
 });
 
 ipcMain.on('remove-files', (event, ...files) => {
-    for( filename of files ){
+    for( let filename of files ){
         if( filename ){
             AlphaChartFile.removeFile(filename);
         }
