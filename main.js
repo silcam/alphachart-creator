@@ -5,9 +5,8 @@ const fs = require('fs');
 const {app, BrowserWindow, dialog, ipcMain, Menu} = require('electron');
 const AdmZip = require('adm-zip');
 
-const util = require('./build/util');
-const AlphaChartFile = require('./build/AlphaChartFile');
-// const configuration = require('./build/configuration');
+const util = require('./app/util');
+const AlphaChartFile = require('./app/AlphaChartFile');
 
 
 let win;
@@ -17,10 +16,10 @@ const isDev = require('electron-is-dev');
 function createWindow () {
     Menu.setApplicationMenu(buildAppMenu());
 
-    let iconPath = path.join(__dirname, 'build', 'graphics', 'alphachart.png');
+    let iconPath = path.join(__dirname, 'app', 'graphics', 'alphachart.png');
     win = new BrowserWindow({width: 800, height: 860, icon: iconPath});
     win.loadURL(url.format({
-        pathname: path.join(__dirname, 'build', 'index.html'),
+        pathname: path.join(__dirname, 'app', 'index.html'),
         protocol: 'file:',
         slashes: true
     }));
@@ -95,7 +94,7 @@ ipcMain.on('open-recording-window', (event, index, letterObject) => {
         recordingWin.oldAudioFile = letterObject.audio;
         let queryString = '?index=' + index + '&letter=' + letterObject.upperCase;
         let myurl = url.format({
-            pathname: path.join(__dirname, 'build', 'record.html'),
+            pathname: path.join(__dirname, 'app', 'record.html'),
             protocol: 'file:',
             slashes: true
         });
