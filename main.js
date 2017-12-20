@@ -91,7 +91,7 @@ ipcMain.on('save-to-file', () => {
 
 ipcMain.on('open-recording-window', (event, index, letterObject) => {
     if( !recordingWin ) {
-        recordingWin = new BrowserWindow({width: 550, height: 230, parent: win, modal: true, autoHideMenuBar: true});
+        recordingWin = new BrowserWindow({width: 550, height: 200, parent: win, modal: true, autoHideMenuBar: true});
         recordingWin.oldAudioFile = letterObject.audio;
         let queryString = '?index=' + index + '&letter=' + letterObject.upperCase;
         let myurl = url.format({

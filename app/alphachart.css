@@ -58,6 +58,14 @@ button.add-new-cell {
     margin-left: 16px;
 }
 
+.chart-cell .btn {
+    cursor: pointer;
+}
+
+.chart-cell .btn .icon {
+    cursor: pointer;
+}
+
 .btn-x-large {
     padding: 15px 30px;
 }

@@ -25,19 +25,23 @@ function CellButtons(props) {
         <React.Fragment>
             <div className='btn-group'>
                 <button className='btn btn-default'
+                        title='Add Letter'
                         onClick={()=>props.addLetter(props.index)}>
                     <span className='icon icon-plus'></span>
                 </button>
                 <button className='btn btn-default'
+                        title='Change Picture'
                         onClick={()=>props.changeImage(props.index)}>
                     <span className='icon icon-picture'></span>
                 </button>
-                <button className='btn btn-default' 
+                <button className='btn btn-default'
+                        title='Record Sound'
                         onClick={()=>props.openRecordingWindow(props.index)}>
                     <span className='icon icon-mic'></span>
                 </button>
                 {props.letterObject.audio && 
                     <button className='btn btn-default'
+                            title='Play Sound'
                             onClick={()=>{
                                 document.getElementById('audio' + props.index).play();
                             }}>
@@ -45,9 +49,10 @@ function CellButtons(props) {
                         <audio id={'audio' + props.index} src={path.join(props.workingDir, props.letterObject.audio)}></audio>
                     </button>
                 }
-                <button className='btn btn-default'>
-                    <span className='icon icon-cancel' 
-                          onClick={()=>props.removeLetter(props.index)}></span>
+                <button className='btn btn-default'
+                        title='Remove Letter'
+                        onClick={()=>props.removeLetter(props.index)} >
+                    <span className='icon icon-cancel'></span>
                 </button>
             </div>
             <div style={{clear: 'both'}}></div>
@@ -86,6 +91,7 @@ function ChartCell(props) {
         return (
             <div className='chart-cell add-new-cell'>
                 <button className='btn btn-default btn-x-large add-new-cell'
+                        title='Add Letter'
                         onClick={()=>props.addLetter()}>
                     <span className='icon icon-large icon-plus'></span>        
                 </button>

@@ -100,7 +100,7 @@ function newChart(window) {
 function open(window) {
     let cancel = warnAboutUnsavedChanges(window);
     if(cancel) { return false; }
-    const filepaths = dialog.showOpenDialog(window, {filters: [{name: 'Alphabet Chart', extensions: ['apc']}]});
+    const filepaths = dialog.showOpenDialog(window, {filters: [{name: 'Alphabet Chart', extensions: ['acp']}]});
     if (filepaths && filepaths[0]) {
         util.clearDir(getWorkingDirectory());
         let zip = new AdmZip(filepaths[0]);
@@ -126,7 +126,7 @@ function saveTo(window, filename) {
 function save(window, options={}) {
     const currentFileName = configuration.readSetting(currentFile);
     if( options.saveAs || !currentFileName) {
-        dialog.showSaveDialog(window, {defaultPath: 'My Alphabet.apc'}, (filename) => {
+        dialog.showSaveDialog(window, {defaultPath: 'My Alphabet.acp'}, (filename) => {
             if (filename) {
                 saveTo(window, filename);
             }
