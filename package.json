@@ -30,7 +30,8 @@
     "jimp": "^0.2.28",
     "nconf": "^0.9.1",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "zip-folder": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

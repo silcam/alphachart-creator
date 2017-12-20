@@ -3,10 +3,13 @@ const util = require('./util');
 const fs = require('fs');
 const path = require('path');
 const AdmZip = require('adm-zip');
+const zipFolder = require('zip-folder');
 const configuration = require('./configuration');
 
 const currentFile = 'currentFile';
 const dirtyWorkingDir = 'dirtyWorkingDir';
+
+const acpFilter = [{name: 'Alphabet Chart', extensions: ['acp']}];
 
 function saveFileConfigsAndUpdateTitle(window, dirty, filename) {
     if(dirty) {
@@ -100,7 +103,7 @@ function newChart(window) {
 function open(window) {
     let cancel = warnAboutUnsavedChanges(window);
     if(cancel) { return false; }
-    const filepaths = dialog.showOpenDialog(window, {filters: [{name: 'Alphabet Chart', extensions: ['acp']}]});
+    const filepaths = dialog.showOpenDialog(window, {filters: acpFilter});
     if (filepaths && filepaths[0]) {
         util.clearDir(getWorkingDirectory());
         let zip = new AdmZip(filepaths[0]);
@@ -112,21 +115,20 @@ function open(window) {
 }
 
 function saveTo(window, filename) {
-    let zip = new AdmZip();
-    zip.addLocalFolder(getWorkingDirectory());
-    try{
-        zip.writeZip(filename);
-        saveFileConfigsAndUpdateTitle(window, false, filename);
-    }
-    catch(err) {
-        dialog.showErrorBox('Unable to save chart', 'Try saving it in a different folder.\n\n' + err.message);
-    }
+    zipFolder(getWorkingDirectory(), filename, (err) => {
+        if(err){
+            dialog.showErrorBox('Unable to save chart', 'Try saving it in a different folder.\n\n' + err.message);
+        }
+        else {
+            saveFileConfigsAndUpdateTitle(window, false, filename);
+        }
+    });
 }
 
 function save(window, options={}) {
     const currentFileName = configuration.readSetting(currentFile);
     if( options.saveAs || !currentFileName) {
-        dialog.showSaveDialog(window, {defaultPath: 'My Alphabet.acp'}, (filename) => {
+        dialog.showSaveDialog(window, {defaultPath: 'My Alphabet.acp', filters: acpFilter}, (filename) => {
             if (filename) {
                 saveTo(window, filename);
             }
