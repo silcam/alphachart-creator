@@ -2,7 +2,7 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 
-const {app, BrowserWindow, dialog, ipcMain, Menu} = require('electron');
+const {app, BrowserWindow, dialog, ipcMain, Menu, protocol} = require('electron');
 const AdmZip = require('adm-zip');
 
 const util = require('./js/util');
@@ -12,6 +12,33 @@ const AlphaChartFile = require('./js/AlphaChartFile');
 let win;
 let recordingWin;
 const isDev = require('electron-is-dev');
+
+app.on('ready', () => {
+    registerACPProtocol();
+    setupReactDevTools();
+    createWindow();
+});
+
+function registerACPProtocol() {
+    protocol.registerFileProtocol('acp', (request, callback) => {
+        const url = request.url.substr(6);
+        callback({path: url});
+    }, (error) => {
+        if (error) console.error('Failed to register ACP protocol');
+    });
+}
+
+function setupReactDevTools() {
+    if(isDev) {
+        const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+        installExtension(REACT_DEVELOPER_TOOLS).then((name) => {
+            console.log(`Added Extension:  ${name}`);
+        })
+        .catch((err) => {
+            console.log('An error occurred: ', err);
+        });
+    }
+}
 
 function createWindow () {
     Menu.setApplicationMenu(buildAppMenu());
@@ -24,18 +51,6 @@ function createWindow () {
         slashes: true
     }));
 
-    // Dev Tools
-    if(isDev) {
-        const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
-        installExtension(REACT_DEVELOPER_TOOLS).then((name) => {
-            console.log(`Added Extension:  ${name}`);
-        })
-        .catch((err) => {
-            console.log('An error occurred: ', err);
-        });
-    }
-
-    // Events
     win.on('closed', () => {
         win = null;
         if (process.platform !== 'darwin') {
@@ -43,8 +58,6 @@ function createWindow () {
         }
     });
 }
-
-app.on('ready', createWindow);
 
 app.on('activate', () => {
     if (win === null) {

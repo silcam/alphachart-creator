@@ -7,7 +7,7 @@ function ImageSection(props) {
     if (image) {
         return (
             <div className='image-wrapper'>
-                <img src={path.join(props.workingDir, image)} style={{maxWidth: '150px', maxHeight: '150px'}} />
+                <img src={'acp://' + path.join(props.workingDir, image)} style={{maxWidth: '150px', maxHeight: '150px'}} />
             </div>
         );
     }
@@ -46,7 +46,7 @@ function CellButtons(props) {
                                 document.getElementById('audio' + props.index).play();
                             }}>
                         <span className='icon icon-play'></span>
-                        <audio id={'audio' + props.index} src={path.join(props.workingDir, props.letterObject.audio)}></audio>
+                        <audio id={'audio' + props.index} src={'acp://' + path.join(props.workingDir, props.letterObject.audio)}></audio>
                     </button>
                 }
                 <button className='btn btn-default'
