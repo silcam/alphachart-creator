@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {ipcRenderer} from 'electron';
 
-import Alphabet from './Alphabet';
+import Alphabet from '../js/Alphabet';
 import AlphabetChart from './AlphabetChart';
 import ChartHeader from './ChartHeader';
 

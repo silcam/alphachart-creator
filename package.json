@@ -2,7 +2,7 @@
   "name": "alphachart-creator",
   "version": "1.0.0",
   "description": "Create alphabet charts for the AlphaChart app.",
-  "main": "main.js",
+  "main": "app/main.js",
   "scripts": {
     "build": "babel app -d build --copy-files",
     "watch": "babel app -d build --copy-files --watch",
@@ -58,7 +58,8 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "npm"
+        "packageManager": "npm",
+        "icon": "app/graphics/alphachart"
       },
       "electronWinstallerConfig": {
         "name": "alphachart_creator"
