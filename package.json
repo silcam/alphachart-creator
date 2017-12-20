@@ -62,7 +62,9 @@
         "icon": "app/graphics/alphachart"
       },
       "electronWinstallerConfig": {
-        "name": "alphachart_creator"
+        "name": "alphachart_creator",
+        "loadingGif": "installer/loading.gif",
+        "noMsi": false
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
