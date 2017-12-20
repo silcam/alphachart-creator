@@ -12,6 +12,7 @@ ipcRenderer.on('update-title', (event, newTitle) => {
     window.document.title = newTitle;
 });
 
+
 class  RootElement extends React.Component {
     constructor(props) {
         super(props);
@@ -20,8 +21,6 @@ class  RootElement extends React.Component {
         this.removeLetter = this.removeLetter.bind(this);
         this.changeImage = this.changeImage.bind(this);
         this.updateAlphabet = this.updateAlphabet.bind(this);
-        this.saveChart = this.saveChart.bind(this);
-        this.openChart = this.openChart.bind(this);
         this.setImage = this.setImage.bind(this);
         this.setAudio = this.setAudio.bind(this);
         this.setAlphabet = this.setAlphabet.bind(this);
@@ -31,8 +30,9 @@ class  RootElement extends React.Component {
         ipcRenderer.on('set-audio', this.setAudio);
         ipcRenderer.on('set-alphabet', this.setAlphabet);
 
+        let workingDir = ipcRenderer.sendSync('get-working-dir');
         let alphabet = [];
-        this.state = {alphabet: alphabet};
+        this.state = {alphabet: alphabet, workingDir: workingDir};
         ipcRenderer.send('get-alphabet');
     }
 
@@ -101,14 +101,6 @@ class  RootElement extends React.Component {
         );
     }
 
-    saveChart() {
-        ipcRenderer.send('save-to-file', this.state.alphabet);
-    }
-
-    openChart() {
-        ipcRenderer.send('open-from-file');
-    }
-
     openRecordingWindow(index) {
         ipcRenderer.send('open-recording-window', 
                             index, 
@@ -118,14 +110,14 @@ class  RootElement extends React.Component {
     render () {
         return (
             <React.Fragment>
-                <ChartHeader filename='My Chart.apc' />
+                <ChartHeader />
                 <AlphabetChart
                     alphabet={this.state.alphabet}
+                    workingDir={this.state.workingDir}
                     addLetter={this.addLetter}
                     removeLetter={this.removeLetter}
                     changeImage={this.changeImage}
                     updateAlphabet={this.updateAlphabet}
-                    saveChart={this.saveChart}
                     openRecordingWindow={this.openRecordingWindow} />
             </React.Fragment>
         );

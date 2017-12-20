@@ -68,7 +68,7 @@ function saveAudio(buffer, index, letter, oldAudioFile) {
     if(oldAudioFile){ util.safeUnlink(oldAudioFile); }
 
     if( index < 10 ){ index = '0' + index; }
-    let basename = index + '-' + letter + '.wav';
+    let basename = index + '-' + letter + '-' + Date.now() + '.wav';
     let filename = path.join(getWorkingDirectory(), basename);
     fs.writeFile(filename, buffer, ()=>{});
     return filename;
@@ -158,3 +158,4 @@ exports.saveAudio = saveAudio;
 exports.newChart = newChart;
 exports.open = open;
 exports.save = save;
+exports.getWorkingDirectory = getWorkingDirectory;

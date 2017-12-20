@@ -1,6 +1,5 @@
 import React from 'react';
-const {dialog} = require('electron').remote
-console.log(dialog)
+import path from 'path';
 
 function ImageSection(props) {
     const image = props.letterObject.image;
@@ -8,7 +7,7 @@ function ImageSection(props) {
     if (image) {
         return (
             <div className='image-wrapper'>
-                <img src={image} style={{maxWidth: '150px', maxHeight: '150px'}} />
+                <img src={path.join(props.workingDir, image)} style={{maxWidth: '150px', maxHeight: '150px'}} />
             </div>
         );
     }
@@ -43,7 +42,7 @@ function CellButtons(props) {
                                 document.getElementById('audio' + props.index).play();
                             }}>
                         <span className='icon icon-play'></span>
-                        <audio id={'audio' + props.index} src={props.letterObject.audio}></audio>
+                        <audio id={'audio' + props.index} src={path.join(props.workingDir, props.letterObject.audio)}></audio>
                     </button>
                 }
                 <button className='btn btn-default'>
@@ -100,7 +99,8 @@ function ChartRow(props) {
         (letterObject, index) => <ChartCell 
                                     key={index}
                                     index={props.startIndex + index}
-                                    letterObject={letterObject} 
+                                    letterObject={letterObject}
+                                    workingDir={props.workingDir} 
                                     addLetter={props.addLetter}
                                     removeLetter={props.removeLetter}
                                     updateUpperCase={props.updateUpperCase}
@@ -156,6 +156,7 @@ class AlphabetChart extends React.Component {
                                 row={row} 
                                 key={index}
                                 startIndex={index * 4} // TODO Extract constant
+                                workingDir={this.props.workingDir}
                                 updateUpperCase={this.updateUpperCase}
                                 updateLowerCase={this.updateLowerCase}
                                 changeImage={this.props.changeImage}
