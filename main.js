@@ -17,7 +17,8 @@ const isDev = require('electron-is-dev');
 function createWindow () {
     Menu.setApplicationMenu(buildAppMenu());
 
-    win = new BrowserWindow({width: 800, height: 860});
+    let iconPath = path.join(__dirname, 'alphachart.png');
+    win = new BrowserWindow({width: 800, height: 860, icon: iconPath});
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'build', 'index.html'),
         protocol: 'file:',
@@ -86,7 +87,7 @@ ipcMain.on('save-to-file', () => {
 
 ipcMain.on('open-recording-window', (event, index, letterObject) => {
     if( !recordingWin ) {
-        recordingWin = new BrowserWindow({width: 550, height: 230, parent: win, modal: true});
+        recordingWin = new BrowserWindow({width: 550, height: 230, parent: win, modal: true, autoHideMenuBar: true});
         recordingWin.oldAudioFile = letterObject.audio;
         let queryString = '?index=' + index + '&letter=' + letterObject.upperCase;
         let myurl = url.format({
