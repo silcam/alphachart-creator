@@ -66,8 +66,14 @@
         "loadingGif": "installer/loading.gif",
         "noMsi": false
       },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
+      "electronInstallerDebian": {
+        "icon": "app/graphics/alphachart.png",
+        "productName": "AlphaChart Creator"
+      },
+      "electronInstallerRedhat": {
+        "icon": "app/graphics/alphachart.png",
+        "productName": "AlphaChart Creator"
+      },
       "github_repository": {
         "owner": "",
         "name": ""

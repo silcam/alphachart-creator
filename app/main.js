@@ -43,7 +43,7 @@ function setupReactDevTools() {
 function createWindow () {
     Menu.setApplicationMenu(buildAppMenu());
 
-    let iconPath = path.join(__dirname, 'app', 'graphics', 'alphachart.png');
+    let iconPath = path.join(__dirname, 'graphics', 'alphachart.png');
     win = new BrowserWindow({width: 800, height: 860, icon: iconPath});
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'chart-window', 'index.html'),
