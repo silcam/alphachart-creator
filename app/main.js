@@ -8,6 +8,8 @@ const AdmZip = require('adm-zip');
 const util = require('./js/util');
 const AlphaChartFile = require('./js/AlphaChartFile');
 
+// No need to do anything special when started by squirrel
+if(require('electron-squirrel-startup')) app.quit();
 
 let win;
 let recordingWin;
