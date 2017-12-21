@@ -8,6 +8,8 @@ const AdmZip = require('adm-zip');
 const util = require('./js/util');
 const AlphaChartFile = require('./js/AlphaChartFile');
 
+// No need to do anything special when started by squirrel
+if(require('electron-squirrel-startup')) app.quit();
 
 let win;
 let recordingWin;
@@ -88,7 +90,7 @@ ipcMain.on('change-image', (event, index, oldImage) => {
 });
 
 ipcMain.on('remove-files', (event, ...files) => {
-    for( filename of files ){
+    for( let filename of files ){
         if( filename ){
             AlphaChartFile.removeFile(filename);
         }
