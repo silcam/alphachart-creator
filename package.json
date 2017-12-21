@@ -74,6 +74,9 @@
         "icon": "app/graphics/alphachart.png",
         "productName": "AlphaChart Creator"
       },
+      "electronInstallerDMG": {
+        "icon": "app/graphics/alphachart.png"
+      },
       "github_repository": {
         "owner": "",
         "name": ""
